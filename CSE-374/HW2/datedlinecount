@@ -1,0 +1,47 @@
+#!/bin/bash
+# (Script) Create a bash script called datedlinecount that works as follows:
+#
+# If it is given fewer than two arguments, it prints an appropriate error message and exits with a return code of 1.
+# Assume all the arguments are filenames for text files; you do not need to check for this.
+# Append to the file indicated by the first argument the following information:
+#    --> The time and date
+#    --> One line for each of the second-through-last arguments, containing the number of lines in the file and then 
+#	     the name of the file
+#    --> If there were three or more arguments (i.e., two or more files to be counted), one additional line with the 
+#        total number of lines in all the files and then the word total.
+#    --> Your script should exit with a return code of 0 after appending the requested information to the file 
+#        indicated by the first argument.
+#
+# For example, executing: ./datedlinecount log foo bar; ./datedlinecount log foo*; cat log might produce something like:
+#
+#	      Wed Apr 4 09:22:16 PDT 2018
+#	      18 foo
+#	      23 bar
+#	      41 total
+#	      Wed Apr 4 09:22:17 PDT 2018
+#	      18 foo
+#	      6 food
+#	      24 total
+#	    
+#
+# Hints: shift, date, wc, $@.
+#
+# Extra credit: The output should include a total line even if only a single file appears in the list. 
+#
+# Notes: I made this script with the assumption that the arguments are passed with the extension '.txt'.
+
+if [ "$#" -lt 2 ]
+then
+	echo "Error: datedlincount requires more than 1 argument"
+	exit 1
+else
+	date > $1
+	wc -l ${@:2} >> $1
+fi
+
+if [ "$#" -eq 2 ]
+then
+	wc -l $2 | cut -f1 -d' ' | tr -d '\r\n' >> $1
+	echo " total" >> $1
+fi
+exit 0

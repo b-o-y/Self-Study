@@ -1,0 +1,16 @@
+# echo
+echo "aardvark"
+
+# cat
+echo "aardvark" > aardvark.txt
+cat aardvark.txt
+
+# ls
+mkdir garbage
+cd garbage
+mkdir garbage
+ls
+
+# grep
+# assuming that words.txt is in the working directory.
+grep "^aardvark$" words.txt

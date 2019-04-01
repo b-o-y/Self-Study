@@ -1,0 +1,76 @@
+Homework 2 (CSE 374 Spring 2018)
+
+Due: Tuesday, April 10, 2018, at 11pm
+
+In this assignment you'll gain some more experience with shell commands and with writing short shell scripts.
+
+General hint: Before trying to write and debug a script, it's very helpful to first work out the necessary commands by experimenting in a shell window. Also, look at man pages and other descriptions of commands. Sometimes options are available that allow a single command to do something you want instead of having to use several commands or writing loops or complex control structures in a script.
+
+1.)  (Commands and output) Use each of the following commands such that aardvark (and nothing more) is printed on standard out, and nothing is printed on standard error when the command is entered. You can precede your commands with other commands (e.g., to create a file, run other commands, etc.) and/or pass options or arguments to your commands. Solve this problem for each of the listed commands individually.
+
+    echo, cat, ls, grep, !!
+
+    In a text file called problem1 describe your solutions, including each command you use and a very brief explanation of it, including information about any additional commands or operations that were done before executing that command. And, yes, "nothing more" in the output means "nothing more".
+
+2.) (An alias) Create a bash alias private such that when you run private foo, the entire subtree of the file-system starting at foo (so just foo if it is a file, but foo and all of its files and subdirectories recursively if it is a directory) has its permissions changed as follows:
+
+        The user's (owner's) permissions are unchanged.
+        The group permissions are changed to match the owner's.
+        The world (others) permissions are changed to remove all access permissions (no read, write, or execute).
+
+    Put your alias in a file defprivate such that entering source defprivate would make private available in the current shell (i.e., source defprivate makes the private command available for use in the current shell, but does not actually execute it immediately). The alias should also work on multiple arguments.
+
+    Hint: g=u.
+
+3.) (Script) Create a bash script combine that takes 2 or more arguments, call them f1, f2, ..., fn. Script combine should work as follows:
+
+        All arguments are treated as filenames.
+        If fewer than two arguments are given, print a suitable error message on stderr and exit with a return code of 1.
+        If a file or directory f1 already exists, print "Error: first file exists" on stderr and exit with a return code of 1.
+        Otherwise concatenate the contents of f2, ..., fn and copy them to stdout. Do not print any error messages from this (for example if some file does not exist or is a directory). Instead, any such error messages should be written to f1. Exit with a return code of 0 after copying the files to stdout. 
+
+    Restriction: You may not use the file names /dev/stdout or /dev/stderr. These are not portable across *nix systems. Although they are found on most versions of Linux the problem can be solved without them.
+
+    Hint: Put filenames in double-quotes in case they contain "funny characters" (such as spaces). Your script should work with any file names, no matter what they contain.
+
+    Hints: shift, $@, -lt, -a.
+
+    Hint: Hints are just ideas you might find useful, not things that must appear in your solution.
+
+4.) (Script) Create a bash script called datedlinecount that works as follows:
+
+        If it is given fewer than two arguments, it prints an appropriate error message and exits with a return code of 1.
+        Assume all the arguments are filenames for text files; you do not need to check for this.
+        Append to the file indicated by the first argument the following information:
+            The time and date
+            One line for each of the second-through-last arguments, containing the number of lines in the file and then the name of the file
+            If there were three or more arguments (i.e., two or more files to be counted), one additional line with the total number of lines in all the files and then the word total.
+        Your script should exit with a return code of 0 after appending the requested information to the file indicated by the first argument.
+
+    For example, executing: ./datedlinecount log foo bar; ./datedlinecount log foo*; cat log might produce something like:
+
+    	      Wed Apr 4 09:22:16 PDT 2018
+    	      18 foo
+    	      23 bar
+    	      41 total
+    	      Wed Apr 4 09:22:17 PDT 2018
+    	      18 foo
+    	      6 food
+    	      24 total
+    	    
+
+    Hints: shift, date, wc, $@.
+
+    Extra credit: The output should include a total line even if only a single file appears in the list.
+
+Assessment: Your solutions should be:
+
+    Correct scripts, etc., that run with bash on either of our reference systems (klaatu or the current CSE Linux virtual machine).
+    In good style, including indentation and line breaks.
+    Of reasonable size.
+
+Identifying information including your name, CSE 374 Homework 2, the problem number, and the date should appear as comments in each of your files.
+
+Turn-in Instructions: Use the turn-in drop box link	to submit your files. If you wish, you can combine your files into an archive (see the tar command) and turn that in as a single file. The choice is yours; do whichever is most convenient.
+
+The drop box will allow you to turn in your homework up to two days late, if you choose to use one or two of your late days, but you are strongly advised to save your late days for later in the quarter when they are almost certain to be much more useful.

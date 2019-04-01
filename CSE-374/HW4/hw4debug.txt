@@ -1,0 +1,105 @@
+Script started on Tue 31 Jul 2018 01:57:10 PM PDT
+]0;tjh@vm: /media/sf_prog/CSE374/hw4tjh@vm:/media/sf_prog/CSE374/hw4$ exitgdb gaspcc -g -o gasp gasp.c
+[01m[Kgasp.c:[m[K In function ‘[01m[Kfind_string[m[K’:
+[01m[Kgasp.c:74:10:[m[K [01;35m[Kwarning: [m[Kimplicit declaration of function ‘[01m[Kstrcasestr[m[K’ [-Wimplicit-function-declaration]
+      if (strcasestr(str, strToMatch) != 0)
+[01;32m[K          ^[m[K
+]0;tjh@vm: /media/sf_prog/CSE374/hw4tjh@vm:/media/sf_prog/CSE374/hw4$ gcc -g -o gasp gasp.cexit[Kgdb gaspcc -g -o gasp gasp.cexit[Kgcc -g gasp.c./a.out -i -n chichiko a.txt b.txt c.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[24Pgcc -Wall gasp.c./a.out -i chichiko a.txt b.txt c.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[21Pgcc -Wall gasp.cls[Kgcc -Wall gasp.c./a.out -i chichiko a.txt b.txt c.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[21Pgcc -Wall gasp.c./a.out -i -n chichiko a.txt b.txt c.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgcc -g gasp.c[Kexit[Kgcc -g -o gasp gasp.c[13Pdb gasp[4Pexitgcc -g -o gasp gasp.c[Kgcc -g -o gasp gasp.cexit[Kgdb gaspcc -g -o gasp gasp.cexit[Kgcc -g gasp.c./a.out -i -n chichiko a.txt b.txt c.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[24Pgcc -Wall gasp.c./a.out -i chichiko a.txt b.txt c.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[21Pgcc -Wall gasp.cls[Kcd /media/sf_prog/CSE374/hw4./a.out -i chichiko a.txt b.txt c.txt[3@-n [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[24Pgcc -Wall gasp.c./a.out -n chichiko a.txt b.txt c.txt[3@i -[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CN -I[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[24Pgcc -Wall gasp.c./a.out -N -I chichiko a.txt b.txt c.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[24Pgcc -Wall gasp.c./a.out -I -N chichiko a.txt b.txt c.txtN -I[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[24Pgcc -Wall gasp.c./a.out -n chichiko a.txt b.txt c.txt[3P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[18Pgcc -Wall gasp.c./a.out chichiko a.txt b.txt c.txt[18Pgcc -Wall gasp.c./a.out chichiko a.txt b.txt c.txt[18Pgcc -Wall gasp.c[6Ptest.c[3P./a.outgcc test.c[3P./a.outgcc test.c c./a.out chichiko a.txt b.txt c.txt[18Pgcc -Wall gasp.c./a.out chichiko a.txt b.txt[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kgdb --args gasp -n -i at.[K[K[Kichiko a.txt b.txt c.txt
+GNU gdb (Ubuntu 7.11.1-0ubuntu1~16.5) 7.11.1
+Copyright (C) 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from gasp...done.
+(gdb) break main
+Breakpoint 1 at 0x4007e5: file gasp.c, line 35.
+(gdb) break gasp.c:68
+Breakpoint 2 at 0x400909: file gasp.c, line 68.
+(gdb) show args
+Argument list to give program being debugged when it is started is "-n -i ichiko a.txt b.txt c.txt".
+(gdb) print argc
+No symbol "argc" in current context.
+(gdb) run
+Starting program: /media/sf_prog/CSE374/hw4/gasp -n -i ichiko a.txt b.txt c.txt
+
+Breakpoint 1, main (argc=7, argv=0x7fffffffe198) at gasp.c:35
+35		if (argc == 1)
+(gdb) print argc
+$1 = 7
+(gdb) print argv
+$2 = (char **) 0x7fffffffe198
+(gdb) print argv[8[K8[K7]
+$3 = 0x0
+(gdb) print argv[7][1P]6]
+$4 = 0x7fffffffe4db "c.txt"
+(gdb) print argv[6][1P]1]
+$5 = 0x7fffffffe4c2 "-n"
+(gdb) bt
+#0  main (argc=7, argv=0x7fffffffe198) at gasp.c:35
+(gdb) c
+Continuing.
+
+Breakpoint 2, find_string (argv=0x7fffffffe198, argc=7) at gasp.c:68
+68			if (fptr)
+(gdb) bt
+#0  find_string (argv=0x7fffffffe198, argc=7) at gasp.c:68
+#1  0x000000000040080d in main (argc=7, argv=0x7fffffffe198) at gasp.c:42
+(gdb) list
+63		{
+64			FILE *fptr;
+65			char str[MAX];
+66			char *nameOfFile = argv[i++];
+67			fptr = fopen(nameOfFile, "r");
+68			if (fptr)
+69			{
+70				while (fgets(str, MAX, fptr))
+71				{
+72					if (caseSensitive)
+(gdb) print nameOfFile
+$6 = 0x7fffffffe4cf "a.txt"
+(gdb) print fptr
+$7 = (FILE *) 0x602010
+(gdb) c
+Continuing.
+a.txt: i'm stuck in my bedroom ichiko
+
+a.txt: help CHIchiKO milkies
+
+a.txt: nice tiddies on chichiko my god
+
+a.txt: chichiko
+
+
+Breakpoint 2, find_string (argv=0x7fffffffe198, argc=7) at gasp.c:68
+68			if (fptr)
+(gdb) c
+Continuing.
+b.txt: chichiko
+
+
+Breakpoint 2, find_string (argv=0x7fffffffe198, argc=7) at gasp.c:68
+68			if (fptr)
+(gdb) c
+Continuing.
+c.txt: i ran to the store when i saw cHIChiko buying milk
+
+c.txt: milky milky CHICHIKO wowowow
+
+c.txt: milk iChiko
+[Inferior 1 (process 15675) exited normally]
+(gdb) c
+The program is not being run.
+(gdb) q
+]0;tjh@vm: /media/sf_prog/CSE374/hw4tjh@vm:/media/sf_prog/CSE374/hw4$ exit
+exit
+
+Script done on Tue 31 Jul 2018 02:00:20 PM PDT

@@ -1,0 +1,29 @@
+#!/bin/bash
+# Create a bash alias private such that when you run private foo, the 
+# entire subtree of the file-system starting at foo (so just foo if 
+# it is a file, but foo and all of its files and subdirectories 
+# recursively if it is a directory) has its permissions changed as 
+# follows:
+# --> The user's (owner's) permissions are unchanged.
+# --> The group permissions are changed to match the owner's.
+# --> The world (others) permissions are changed to remove all 
+# access permissions (no read, write, or execute).
+# Put your alias in a file defprivate such that entering source 
+# defprivate would make private available in the current shell (i.e., 
+# source defprivate makes the private command available for use in the 
+# current shell, but does not actually execute it immediately). The 
+# alias should also work on multiple arguments.
+
+# I made the alias in terminal by doing:
+# alias private='/media/sf_prog/CSE374/hw2/defprivate'
+# where the file path is where defprivate is saved.
+# One can call options on chmod by passing it as a second argument
+# like so:
+# private foo c
+
+if [ "$2" ]
+then
+	chmod -R$2 g=u,o=-rwx $1
+else
+	chmod -R g=u,o=-rwx $1
+fi

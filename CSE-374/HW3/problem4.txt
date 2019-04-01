@@ -1,0 +1,6 @@
+1.) The produce-scatterplot.gnuplot just labels and sets the axes. Then it looks like
+	plot handles most of the heavy work of reading the results.txt file.
+2.) I can't really see a trend as far as making a conclusion about the size of a webpage and it's popularity.
+	I'd say most are rather small, so one might say that a webpage that is popular often takes up
+	less space. I think it might be interesting to see an average of many websites and compare that with
+	this.

@@ -1,0 +1,185 @@
+
+Homework 3 (CSE 374 Spring 2018)
+
+Due: Tuesday, April 17, 2018, at 11pm
+Assignment goal
+
+The main goal of this assignment is to learn more about shell scripting and using regular expressions and string processing programs, particularly grep and sed. You will also learn about accessing files from the web and using a program called gnuplot for plotting files.
+Searching the Web
+
+Note: The instructions for this assignment may seem a bit long. This is because we try to give you plenty of samples and hints for each part. We hope this will help you complete the assignment faster.
+Documentation
+
+In addition to the lecture notes, you may find "The Linux Pocket Guide" a useful reference for completing this assignment.
+
+Online manuals:
+
+    bash
+    sed
+    grep
+    gnuplot
+
+In general, whenever you need to use a new tool, you should get into the habit of looking for documentation online. There are usually good tutorials and examples that you can learn from. As you work on this assignment, if you find that you would like more information about a tool (sed, grep, or gnuplot), try searching for the name of the tool or the name of the tool followed by keywords such as "tutorial" or "documentation". Also be sure to use the regular Unix documentation (man pages and info command), and experiment with commands to try out various options and see what they do.
+Getting ready
+
+Download the file: hw3.tar. Extract all the files for this assignment using the following command:
+
+    $ tar -xvf hw3.tar
+
+You should now see a directory called hw3.
+
+If you see it, you are ready to start the assignment. If this did not work for you, please post a message on the discussion list describing the problem to see if someone has any ideas, or contact a TA or the instructor (if you send mail, please use cse374-staff[at]cs), or talk to another student in the class.
+Background
+
+Because you did very well in CSE 374, you were offered a summer position in a research group. As part of your summer job, you would like to run the following experiment. You have found an old web page with a list of the 100 most popular websites at the time and would like to learn more about them. Given this list you would like to measure the sizes of their current index (home) pages (the first index.html file that the browser downloads when you visit the site). You suspect that popular sites must have very small index pages because they need to handle a heavy user load.
+
+We provide you the list of popular websites in the file popular.html (this particular list was taken from 100best websites.org some time ago.
+
+One approach would be to manually download each index page in the list, and use wc to compute its size in bytes. You could then manually put all the results in a table and plot some graphs to display the results. This approach would be long, tedious, and error prone. It would also be painful if you wanted to repeat the experiment on the 100 least popular websites. Instead, you decide to automate the experiment by writing a set of scripts.
+1. Download a page and compute its size
+
+In a file called perform-measurement.sh, write a bash script that takes a URL as an argument and outputs the size of the corresponding page in bytes.
+
+For example, executing your script with the URL of homework 1 on the class website as argument:
+
+    $ ./perform-measurement.sh http://courses.cs.washington.edu/courses/cse374/18sp/hws/hw1.html
+
+should output only 9062 to standard output:
+
+    9062
+
+(This number was correct at the time this assignment was prepared, but might be somewhat different if the page is modified some time in the future.)
+
+If the user does not provide any arguments, the script should print an appropriate error message and exit with a return code of 1.
+
+If the user provides an erroneous argument or if downloading the requested page fails for any other reason, the script should simply print the number "0" (zero). In this case, or if the page is downloaded successfully, the script should exit with a return code of 0 after printing the number to to standard output.
+
+Hints:
+
+    Remember to change permissions on perform-measurement.sh to make it executable.
+    The wget program downloads files from the web. Use man wget to see its options.
+    Your script may create temporary files if you want. The mktemp program produces unique file names for temporary files. If you create a temporary file, you should remove it before your script exits. Generally it is best to create temporary files like this in /tmp.
+    Experiment with the following commands: wc a-test-file and wc < a-test-file.
+    To suppress the output of a command, try to redirect its output to /dev/null. For example try ls > /dev/null
+
+2. Parsing the html list of websites
+
+The list of popular websites is in html format. To run an experiment automatically on each URL in this list, we need to extract the URLs and write them into a text file. There are several ways in which this can be done, and different utilities (sed, grep) can help.
+
+You must use grep and/or sed even if you know other programs or languages (awk, perl, python, ...) that could do similar things in different ways. But it's fine to use egrep and extended regular expressions in sed and grep if you wish.
+
+In a file called parse.sh, write a script that extracts the URLs and writes them into a text file. The script should take two arguments: the name of the output file for results and the name of the input html file.
+
+For example, executing:
+
+    $ ./parse.sh popular.txt popular.html
+
+Should write content similar to the following into popular.txt:
+
+    http://www.yahoo.com/
+    http://www.google.com/
+    http://www.amazon.com/
+    ...
+
+If the user provides fewer than 2 arguments, the script should print an error message and exit with a return code of 1.
+
+If the text file provided as argument (for the output) exists, the script should simply overwrite it without any warning.
+
+If the html file provided as argument (for the input) does not exist, the script should print an appropriate error message and exit with a return code of 1.
+
+If the script does not report any errors, it should exit with a return code of 0.
+
+Q: How come popular.txt might not contain exactly 100 urls? Is it a bug in your script or a bug in the data? You don't need to answer this question in writing, just think about it for yourself. You do need to explain in a readme file submitted with the rest of the assignment how you chose to handle any extra urls.
+
+Hints: step-by-step instructions
+
+    Use grep to find all the lines that contain the string http. Test if it works before proceeding to step 2.
+    Use sed to replace everything that precedes the URL with the empty string. Test if it works before proceeding to step 3. For this assignment, your sed command(s) must match the http://... URL strings themselves, not surrounding text in the table. (i.e., your sed command must use a pattern that matches the URLs although, of course, it probably will contain more than that if needed to isolate the URL strings. But it can't just be .* surrounded by patterns that match whatever appears before and after the URLs in this particular data file.)
+    Use sed to replace everything after the URL with the empty string as well. Test if everything works.
+
+Note: there are some URLs at the beginning and at the end of the file (such as http://www.100bestwebsites.org/criteria) that are not actually part of the list of 100 best web sites. It's up to you to figure out a reasonable way to handle this so they don't get included in the output - either by removing them somehow (by hand? with some sort of script?), or leaving them in and figuring out how best to deal with them. You should explain what you did in a readme file that you turn in with your code. This shouldn't be extensive or long-winded, just a sentence or two about what the problem was and how you dealt with it.
+3. Running the experiment
+
+To perform the experiment, your need to execute the script perform-measurement.sh on each URL inside the file popular.txt. Once again, you would like to do this automatically with a script.
+
+In a file called run-experiment.sh, write a shell script that:
+
+    run-experiment.sh should write its output to a file. The name of that file should be given by the user as the first argument.
+    Takes a file with a list of URLs as the second argument and executes perform-measurement.sh on each URL in the file.
+    For each URL, run-experiment.sh should produce the following output, separated by spaces:
+
+        rank URL page-size
+
+    The rank of a page is the line number of the corresponding URL in popular.txt (or whatever the input file containing the URLs is named). The URL on the first line of the table has rank 1, the URL on the second line has rank 2, and so on until the last URL/line in the file. The URL is the same string as the argument you gave to perform-measurement.sh. The page-size is the result of perform-measurement.sh.
+    If perform-measurement.sh returns zero for a URL, run-experiment.sh should not write any output to the file for that URL.
+    Because it can take a long time for the experiment to finish, your script should provide feedback to the user. The feedback should indicate the progress of the experiment.
+        Before executing perform-measurement.sh on a URL, your script should print the following message: "Performing byte-size measurement on <URL>...".
+        Once perform-measurement.sh produces a value, if the value is greater than zero, the script should output the following message: "...successful". If the value is zero, this means some error has occurred, and the script should output the following message: "...failure".
+    When run-experiment.sh finishes, it should exit with a return code of 0.
+
+To debug your script, instead of trying it directly on popular.txt, we provide you with a smaller file: popular-small.txt. You should execute your script on popular-small.txt until it works. Only then try it on popular.txt.
+
+Executing your script as follows:
+
+    $ ./run-experiment.sh results-small.txt popular-small.txt
+
+Should produce output similar to the following:
+
+    Performing byte-size measurement on http://courses.cs.washington.edu/courses/cse374/18sp/
+    ...successful
+    Performing byte-size measurement on http://i.will.return.an.error
+    ...failure
+    Performing byte-size measurement on http://courses.cs.washington.edu/courses/cse374/18sp/syllabus.html
+    ...successful
+
+And the content of results-small.txt should be similar to the ones below. Note that the exact values will change as we edit the class website!
+
+    1 http://courses.cs.washington.edu/courses/cse374/18sp/ 4556
+    3 http://courses.cs.washington.edu/courses/cse374/18sp/syllabus.html 10941
+
+As another example, after executing your script as follows:
+
+    $ ./run-experiment.sh results.txt popular.txt
+
+The file results.txt, should contain results that are formatted like the ones shown below (when you run your experiment, the exact values will likely differ)
+
+    ...
+    4 http://www.about.com/ 47597
+    5 http://www.bartleby.com/ 254654
+    6 http://groups.google.com/ 22469
+    ...
+
+4. Plotting the results
+
+It is hard to understand the results just by looking at a list of numbers, so you would like to produce a graph. More specifically, you would like to produce a scatterplot, where the x-axis will show the rank of a website and the y-axis will show the size of the index page.
+
+Luckily, you talk about your problem to your friend Alice. She suggests that you use a program called gnuplot to produce the graph. Because she used it many times before, Alice helps you write the necessary gnuplot script called produce-scatterplot.gnuplot. Note that the gnuplot file expects your experimental results to be stored in a file called results.txt.
+
+Produce the graph with the following command:
+
+    $ gnuplot produce-scatterplot.gnuplot  
+
+The script should produce a file called scatterplot.eps. You can view it with ghostscript (gs) or evince or any other program that knows how to display an eps (encapsulated PostScript) file.
+
+    $ gs scatterplot.eps
+
+If you are working on klaatu or some other remote machine, you can either transfer the .eps file to your local machine and view it there, or you can see it by running the viewer program remotely. In the later case you may need to use the -Y option on ssh (ssh -Y klaatu.cs....) or the equivalent on your remote login application (Putty, for example). This sets up the connection so the remote viewer program can open a window on your local machine to display the results.
+
+If you are using the CSE Linux VM and ghostscript is not installed, use the Centos software installation program to add it (sudo yum install ghostscript). Similarly, if gnuplot or evince or something else you need is missing, use yum to install it.
+
+Note: The version of evince that is installed on the current version of the CSE Linux systems may have problems displaying the .eps files generated by gnuplot, at least some of the time. If you run into that problem, use ghostscript instead or transfer the files to another system for viewing.
+
+Write your answers to the following questions in a file called problem4.txt:
+
+Q1: Examine the gnuplot file produce-scatterplot.gnuplot. Ignoring the first line, explain what the rest of the script does.
+
+Q2: Looking at the scatterplot, what can you conclude about the relationship between the popularity of a site and the size of its index.html file? Are these result what you expected?
+Turn-in instructions
+
+Here is the list of files that you need to turn in:
+
+    Problem 1: perform-measurement.sh
+    Problem 2: parse.sh
+    Problem 3: run-experiment.sh
+    Problem 4: problem4.txt and scatterplot.eps
+    The readme file containing your (brief) notes about how you dealt with extraneous urls or other problems in the input data.
