@@ -1,0 +1,184 @@
+(gdb) disassemble phase_2
+Dump of assembler code for function phase_2:
+   0x0000000000400efc <+0>:		push   %rbp
+   0x0000000000400efd <+1>:		push   %rbx
+   0x0000000000400efe <+2>:		sub    $0x28,%rsp
+   0x0000000000400f02 <+6>:		mov    %rsp,%rsi
+   0x0000000000400f05 <+9>:		callq  0x40145c <read_six_numbers>
+   0x0000000000400f0a <+14>:	cmpl   $0x1,(%rsp)
+   0x0000000000400f0e <+18>:	je     0x400f30 <phase_2+52>
+   0x0000000000400f10 <+20>:	callq  0x40143a <explode_bomb>
+   0x0000000000400f15 <+25>:	jmp    0x400f30 <phase_2+52>
+   0x0000000000400f17 <+27>:	mov    -0x4(%rbx),%eax
+   0x0000000000400f1a <+30>:	add    %eax,%eax
+   0x0000000000400f1c <+32>:	cmp    %eax,(%rbx)
+   0x0000000000400f1e <+34>:	je     0x400f25 <phase_2+41>
+   0x0000000000400f20 <+36>:	callq  0x40143a <explode_bomb>
+   0x0000000000400f25 <+41>:	add    $0x4,%rbx
+   0x0000000000400f29 <+45>:	cmp    %rbp,%rbx
+   0x0000000000400f2c <+48>:	jne    0x400f17 <phase_2+27>
+   0x0000000000400f2e <+50>:	jmp    0x400f3c <phase_2+64>
+   0x0000000000400f30 <+52>:	lea    0x4(%rsp),%rbx
+   0x0000000000400f35 <+57>:	lea    0x18(%rsp),%rbp
+   0x0000000000400f3a <+62>:	jmp    0x400f17 <phase_2+27>
+   0x0000000000400f3c <+64>:	add    $0x28,%rsp
+   0x0000000000400f40 <+68>:	pop    %rbx
+   0x0000000000400f41 <+69>:	pop    %rbp
+   0x0000000000400f42 <+70>:	retq   
+End of assembler dump.
+
+It seems safe to assume that there are 6 numbers that will crack the bomb, because of the <read_six_numbers> method.
+
+What happens before the first <explode_bomb> is a comparison.
+   0x0000000000400f0a <+14>:	cmpl   $0x1,(%rsp)
+   0x0000000000400f0e <+18>:	je     0x400f30 <phase_2+52>
+   0x0000000000400f10 <+20>:	callq  0x40143a <explode_bomb>
+If (%rsp) != 1, the bomb explodes. It is logical to believe that the first number is 1.
+
+Following along with the assumption we have the correct numbers:
+   0x0000000000400f0e <+18>:	je     0x400f30 <phase_2+52>
+So let's jump:
+   0x0000000000400f30 <+52>:	lea    0x4(%rsp),%rbx
+   0x0000000000400f35 <+57>:	lea    0x18(%rsp),%rbp
+   0x0000000000400f3a <+62>:	jmp    0x400f17 <phase_2+27>
+I believe the first two instructions are prepping your next two guesses by grabbing them off the stack an dmoving them into registers. onto the next jump:
+   0x0000000000400f17 <+27>:	mov    -0x4(%rbx),%eax
+   0x0000000000400f1a <+30>:	add    %eax,%eax
+   0x0000000000400f1c <+32>:	cmp    %eax,(%rbx)
+   0x0000000000400f1e <+34>:	je     0x400f25 <phase_2+41>
+   0x0000000000400f20 <+36>:	callq  0x40143a <explode_bomb>
+I'm actually not sure what's going on here, maybe I should look at read_six_numbers.
+
+(gdb) disassemble read_six_numbers
+Dump of assembler code for function read_six_numbers:
+   0x000000000040145c <+0>:		sub    $0x18,%rsp 		
+	; Pretty self explanatory. 0x7fffffffe0a8 becomes 0x7fffffffe090
+	
+   0x0000000000401460 <+4>:		mov    %rsi,%rdx		
+	; simple move rsi and rdx both contain 0x7fffffffe0b0
+	
+   0x0000000000401463 <+7>:		lea    0x4(%rsi),%rcx
+	; Move the address at rsi+4 into rcx, which is 0x7fffffffe0b4
+	
+   0x0000000000401467 <+11>:	lea    0x14(%rsi),%rax
+	; 0x7fffffffe0b0+0x14 into rax, 0x7fffffffe0c4
+   
+   0x000000000040146b <+15>:	mov    %rax,0x8(%rsp)
+	; rsp stores 0x7fffffffe090, therefore we're moving the value 0x7fffffffe0c4 
+	; into 0x7fffffffe090+0x8.
+   
+   0x0000000000401470 <+20>:	lea    0x10(%rsi),%rax
+	; Move 0x7fffffffe0b0+0x10 into rax, rax becomes 0x7fffffffe0c0
+	
+   0x0000000000401474 <+24>:	mov    %rax,(%rsp)
+	; Move the value 0x7fffffffe0c0 into the address, what I see in gdb is
+	; 0xffffe0c0 gets moved there.
+	
+   0x0000000000401478 <+28>:	lea    0xc(%rsi),%r9
+	; r9 now stores 0x7fffffffe0bc.
+	; This address stores zero.
+   0x000000000040147c <+32>:	lea    0x8(%rsi),%r8
+	; r8 now stores 0x7fffffffe0b8.
+	; This address stores 6,305,744 or 0x6037d0
+	
+   0x0000000000401480 <+36>:	mov    $0x4025c3,%esi
+   0x0000000000401485 <+41>:	mov    $0x0,%eax
+	; Both of these are rather self explanatory.
+	
+   0x000000000040148a <+46>:	callq  0x400bf0 <__isoc99_sscanf@plt>
+   0x000000000040148f <+51>:	cmp    $0x5,%eax
+	; Aaaaaaaaaaaand gdb broke on me.
+   0x0000000000401492 <+54>:	jg     0x401499 <read_six_numbers+61>
+   0x0000000000401494 <+56>:	callq  0x40143a <explode_bomb>
+   0x0000000000401499 <+61>:	add    $0x18,%rsp
+   0x000000000040149d <+65>:	retq   
+End of assembler dump.
+
+Running gdb passphrase.txt, and setting break points before and after 0x00401494 I find that the program explodes at 0x401494. So, I'm failing:
+cmp $0x5,%eax
+
+SOOOO, I was in incorrect in my original assumption! The first of the six numbers may be 5. Trying this does not seem to work.
+
+Running some more tests, I think that compare is just checking that there were 6 arguments passed. I saw the solution for an older version of this lab, and the answer was of the form:
+1 1 11 11 111 111
+Meaning the string must be this long (or greater than) to pass the read_six_numbers test. Therefore, I will move on from this.
+	
+After the comparison of 1, the program moves onto (+52):
+   0x0000000000400f17 <+27>:	mov    -0x4(%rbx),%eax
+   0x0000000000400f1a <+30>:	add    %eax,%eax
+   0x0000000000400f1c <+32>:	cmp    %eax,(%rbx)
+   0x0000000000400f1e <+34>:	je     0x400f25 <phase_2+41>
+   0x0000000000400f20 <+36>:	callq  0x40143a <explode_bomb>
+   0x0000000000400f25 <+41>:	add    $0x4,%rbx
+   0x0000000000400f29 <+45>:	cmp    %rbp,%rbx
+   0x0000000000400f2c <+48>:	jne    0x400f17 <phase_2+27>
+   0x0000000000400f2e <+50>:	jmp    0x400f3c <phase_2+64>
+   0x0000000000400f30 <+52>:	lea    0x4(%rsp),%rbx
+   0x0000000000400f35 <+57>:	lea    0x18(%rsp),%rbp
+   0x0000000000400f3a <+62>:	jmp    0x400f17 <phase_2+27>
+   0x0000000000400f3c <+64>:	add    $0x28,%rsp
+   0x0000000000400f40 <+68>:	pop    %rbx
+   0x0000000000400f41 <+69>:	pop    %rbp
+   0x0000000000400f42 <+70>:	retq   
+
+Let's unroll this in sequential order:
+   0x0000000000400f30 <+52>:	lea    0x4(%rsp),%rbx
+   0x0000000000400f35 <+57>:	lea    0x18(%rsp),%rbp
+   0x0000000000400f3a <+62>:	jmp    0x400f17 <phase_2+27>
+   0x0000000000400f17 <+27>:	mov    -0x4(%rbx),%eax
+   0x0000000000400f1a <+30>:	add    %eax,%eax
+   0x0000000000400f1c <+32>:	cmp    %eax,(%rbx)
+   0x0000000000400f1e <+34>:	je     0x400f25 <phase_2+41>
+   0x0000000000400f20 <+36>:	callq  0x40143a <explode_bomb>
+<+32> is of interest, let's see what value is in the registers while running gdb.
+   0x0000000000400f1a <+30>:	add    %eax,%eax	; 1+1=2
+   0x0000000000400f1c <+32>:	cmp    %eax,(%rbx)	; %rbx=0x7fffffffe0b4, (%rbx)=1
+ 
+ Because of my test string, I know that the next digit must be 2. So now we jump to <+41>:
+   0x0000000000400f25 <+41>:	add    $0x4,%rbx	; rbx=0x7fffffffe0b8.
+   0x0000000000400f29 <+45>:	cmp    %rbp,%rbx	; rbp contains 0x7fffffffe0c8.
+   0x0000000000400f2c <+48>:	jne    0x400f17 <phase_2+27>
+   0x0000000000400f2e <+50>:	jmp    0x400f3c <phase_2+64> ; If the addresses are equal, we move onto phase 3.
+   
+ Now we're looping:
+ => 0x0000000000400f17 <+27>:	mov    -0x4(%rbx),%eax
+   0x0000000000400f1a <+30>:	add    %eax,%eax
+   0x0000000000400f1c <+32>:	cmp    %eax,(%rbx)
+   0x0000000000400f1e <+34>:	je     0x400f25 <phase_2+41>
+   0x0000000000400f20 <+36>:	callq  0x40143a <explode_bomb>
+From gdb:
+Breakpoint 3, 0x0000000000400f1a in phase_2 ()
+(gdb) print /x $eax
+$15 = 0x2
+(gdb) ni
+0x0000000000400f1c in phase_2 ()
+(gdb) print /x $eax
+$16 = 0x4
+(gdb) print /x $rbx
+$17 = 0x7fffffffe0b8
+(gdb) x 0x7fffffffe0b8
+0x7fffffffe0b8:	0x0000000b
+
+My next number must be 4. We can see that the loop is just adding to itself every time with eax. The break condition is given by:
+   0x0000000000400f29 <+45>:	cmp    %rbp,%rbx
+   0x0000000000400f2c <+48>:	jne    0x400f17 <phase_2+27>
+   0x0000000000400f2e <+50>:	jmp    0x400f3c <phase_2+64>
+   
+But knowing we need six numbers, we can asssume 1 2 4 8 16 32, however that did not work for me. What I found instead is I break on:
+(gdb) print /x $eax
+$39 = 0x20
+(gdb) print /x $rbx
+$41 = 0x7fffffffe0c4
+(gdb) x 0x7fffffffe0c4
+0x7fffffffe0c4:	0x00000003
+
+The last line should be 32, instead it's only 3 which causes the bomb to defuse. I THINK this is an error in the lab given to people
+who are self studying. There must be something wrong with read_six_numbers because it's reading my input of 32 as 3. By changing it
+to 320 rather than 32, I find that 32 is then stored as the sixth number. Even using 329 rather than 320 defuses the bomb. I think the
+logical conclusion is there is a bug in how the program is converting a string to 6 numbers.
+
+
+
+
+
+

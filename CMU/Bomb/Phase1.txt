@@ -1,0 +1,61 @@
+Examining the program's C file, it can be seen that the first function
+call of interest is the phase_1() function, as it is what will determine
+whether the bomb will go off at the beginning.
+After a lot of time messing around in gdb to get a better idea of what the
+program was about, I was able to glean information from the following:
+
+$ gdb bomb
+(gdb) break phase_1
+(gdb) run
+
+Without a text file input, the program will ask for a string from standard
+in. This is arbitary, use which ever.
+
+Once I got to my first breakpoint, I dissasembled phase_1 to see what it
+looked like:
+
+Breakpoint 1, 0x0000000000400ee0 in phase_1 ()
+(gdb) disassemble
+Dump of assembler code for function phase_1:
+=> 0x0000000000400ee0 <+0>:		sub    $0x8,%rsp
+   0x0000000000400ee4 <+4>:		mov    $0x402400,%esi
+   0x0000000000400ee9 <+9>:		callq  0x401338 <strings_not_equal>
+   0x0000000000400eee <+14>:	test   %eax,%eax
+   0x0000000000400ef0 <+16>:	je     0x400ef7 <phase_1+23>
+   0x0000000000400ef2 <+18>:	callq  0x40143a <explode_bomb>
+   0x0000000000400ef7 <+23>:	add    $0x8,%rsp
+   0x0000000000400efb <+27>:	retq   
+End of assembler dump.
+
+<strings not equal> is pretty self explanatory given the name. Depending
+on what happens with <strings_not_equal> will determine what the test of
+%eax will do. If %eax is 0 for example, then test will set the zero flag
+(0&0=0). je, jump if equal to the next phase. 
+
+So, it seems likely that %esi contains the string of interest since that
+is the instruction right before <strings_not_equal>.
+
+(gdb) print /x $esi
+$1 = 0x402400
+(gdb) x /25c 0x402400
+0x402400:	66 'B'	111 'o'	114 'r'	100 'd'	101 'e'	114 'r'	32 ' '	114 'r'
+0x402408:	101 'e'	108 'l'	97 'a'	116 't'	105 'i'	111 'o'	110 'n'	115 's'
+0x402410:	32 ' '	119 'w'	105 'i'	116 't'	104 'h'	32 ' '	67 'C'	97 'a'
+0x402418:	110 'n'
+
+This must be the passphrase for phase_1. Let's see what other information
+there is:
+
+(gdb) x /25c 0x401338
+0x401338 <strings_not_equal>:	65 'A'	84 'T'	85 'U'	83 'S'	72 'H'	-119 '\211'	-5 '\373'	72 'H'
+0x401340 <strings_not_equal+8>:	-119 '\211'	-11 '\365'	-24 '\350'	-44 '\324'	-1 '\377'	-1 '\377'	-1 '\377'	65 'A'
+0x401348 <strings_not_equal+16>:	-119 '\211'	-60 '\304'	72 'H'	-119 '\211'	-17 '\357'	-24 '\350'	-55 '\311'	-1 '\377'
+0x401350 <strings_not_equal+24>:	-1 '\377'
+
+Looks garbled, must just be the address of the function and nothing more(?). Then checking the contents 
+of %eax after the <strings_not_equal> call just shows 0x1.
+
+So, let's use the string utility to see if we can find "Border relations...":
+Border relations with Canada have never been better.
+
+Is found when "strings bomb" is ran. Using it in the program does indeed pass phase_1.

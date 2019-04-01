@@ -1,0 +1,96 @@
+Put a break at phase_5, my test phrase is "onetwos":
+=> 0x0000000000401062 <+0>:		push   %rbx
+   0x0000000000401063 <+1>:		sub    $0x20,%rsp
+   0x0000000000401067 <+5>:		mov    %rdi,%rbx
+   0x000000000040106a <+8>:		mov    %fs:0x28,%rax
+   0x0000000000401073 <+17>:	mov    %rax,0x18(%rsp)
+   0x0000000000401078 <+22>:	xor    %eax,%eax
+   0x000000000040107a <+24>:	callq  0x40131b <string_length>	; this
+   0x000000000040107f <+29>:	cmp    $0x6,%eax				; And this 
+   0x0000000000401082 <+32>:	je     0x4010d2 <phase_5+112>
+   0x0000000000401084 <+34>:	callq  0x40143a <explode_bomb>	; already tell me the string needs to be 7 chars long (zero index counting).
+   0x0000000000401089 <+39>:	jmp    0x4010d2 <phase_5+112>
+   0x000000000040108b <+41>:	movzbl (%rbx,%rax,1),%ecx
+   0x000000000040108f <+45>:	mov    %cl,(%rsp)			
+   0x0000000000401092 <+48>:	mov    (%rsp),%rdx			
+   0x0000000000401096 <+52>:	and    $0xf,%edx			
+   0x0000000000401099 <+55>:	movzbl 0x4024b0(%rdx),%edx
+   0x00000000004010a0 <+62>:	mov    %dl,0x10(%rsp,%rax,1)
+   0x00000000004010a4 <+66>:	add    $0x1,%rax
+   0x00000000004010a8 <+70>:	cmp    $0x6,%rax
+   0x00000000004010ac <+74>:	jne    0x40108b <phase_5+41>
+   0x00000000004010ae <+76>:	movb   $0x0,0x16(%rsp)
+   0x00000000004010b3 <+81>:	mov    $0x40245e,%esi
+   0x00000000004010b8 <+86>:	lea    0x10(%rsp),%rdi
+   0x00000000004010bd <+91>:	callq  0x401338 <strings_not_equal>
+   0x00000000004010c2 <+96>:	test   %eax,%eax
+   0x00000000004010c4 <+98>:	je     0x4010d9 <phase_5+119>
+   0x00000000004010c6 <+100>:	callq  0x40143a <explode_bomb>
+   0x00000000004010cb <+105>:	nopl   0x0(%rax,%rax,1)
+   0x00000000004010d0 <+110>:	jmp    0x4010d9 <phase_5+119>
+   0x00000000004010d2 <+112>:	mov    $0x0,%eax
+   0x00000000004010d7 <+117>:	jmp    0x40108b <phase_5+41>
+   0x00000000004010d9 <+119>:	mov    0x18(%rsp),%rax
+   0x00000000004010de <+124>:	xor    %fs:0x28,%rax
+   0x00000000004010e7 <+133>:	je     0x4010ee <phase_5+140>
+   0x00000000004010e9 <+135>:	callq  0x400b30 <__stack_chk_fail@plt>
+   0x00000000004010ee <+140>:	add    $0x20,%rsp
+   0x00000000004010f2 <+144>:	pop    %rbx
+   0x00000000004010f3 <+145>:	retq  
+   
+
+So by using a s 7 char string, I pass the first check, moving on:
+   0x0000000000401082 <+32>:	je     0x4010d2 <phase_5+112>
+   0x00000000004010d2 <+112>:	mov    $0x0,%eax
+   0x00000000004010d7 <+117>:	jmp    0x40108b <phase_5+41> ; some dumb jumping to obfuscate it, I guess.
+   0x000000000040108b <+41>:	movzbl (%rbx,%rax,1),%ecx
+;;; ecx first contains 0. %rbx is 0x6038c0, %rax is zero, so rbx+0*1 = (rbx) = 0x74656e6f, but the instruction is only for
+a byte, zero extended to a long, therefore, ecx contains 0x6f.  ;;;
+   0x000000000040108f <+45>:	mov    %cl,(%rsp)				; Move 0x6f into address 0x7fffffffe0c0, address now contains 0x40226f.
+   0x0000000000401092 <+48>:	mov    (%rsp),%rdx				; %rdx now contains 0x40226f
+   0x0000000000401096 <+52>:	and    $0xf,%edx				; 0xf AND 0x40226f = 0xf
+   0x0000000000401099 <+55>:	movzbl 0x4024b0(%rdx),%edx		; %rdx and %edx both contain 0xf, at end of instruction %edx has 0x6c
+   0x00000000004010a0 <+62>:	mov    %dl,0x10(%rsp,%rax,1)	; %dl contains 0x6c, $rax is zero, $rsp is 0x7fffffffe0c0 which points to 0x40226f, x/s is nonsense.
+   0x00000000004010a4 <+66>:	add    $0x1,%rax				; %rax was zero now 1.
+   0x00000000004010a8 <+70>:	cmp    $0x6,%rax
+   0x00000000004010ac <+74>:	jne    0x40108b <phase_5+41>	; so we loop for a while,
+   
+   0x00000000004010b3 <+81>:	mov    $0x40245e,%esi
+   0x00000000004010b8 <+86>:	lea    0x10(%rsp),%rdi
+=> 0x00000000004010bd <+91>:	callq  0x401338 <strings_not_equal>
+
+Let's print some stuff:
+	(gdb) print /x $rsi
+	$18 = 0x40245e
+	(gdb) x/s $rsi
+	0x40245e:	"flyers"
+Given this is CMU, I'm curious if the password has to do with the Philadelphia Flyers.
+Continuing:
+   0x00000000004010bd <+91>:	callq  0x401338 <strings_not_equal>
+   0x00000000004010c2 <+96>:	test   %eax,%eax
+   0x00000000004010c4 <+98>:	je     0x4010d9 <phase_5+119>
+=> 0x00000000004010c6 <+100>:	callq  0x40143a <explode_bomb>
+So, I explode when using "onetwos". I tried "flyers", but that can't work since flyers is only 6 chars.
+
+I'm making an assumption that the program messes with the passphrase, otherwise we wouldn't have
+the answer so clearly given in one instruction. I tried running the program again with "flyerss"
+to meet the requirement for 7 chars, and found at:
+	0x00000000004010b8 <+86>:	lea    0x10(%rsp),%rdi
+After this, %rdi will contain "rvfedu." I'm assuming this is a mash up of the user passphrase. I have
+no clue how to reverse engineer this. However, I believe it's supposed to be "flyers", so maybe I can
+work backwards to see what word will give me flyers in the end.
+
+More examining:
+(gdb) x/s $rdi
+0x7fffffffe0d0:	"rvfedu"
+(gdb) print /x $rdi
+$21 = 0x7fffffffe0d0
+(gdb) x/s $esi
+0x40245e:	"flyers"
+
+So, 0x7fffffffe0d0 gets jumbled around 6 times until it's 0x40245e
+
+
+
+
+

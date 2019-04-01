@@ -1,0 +1,11 @@
+--> When I run the example command, the program fails. But if I do my own test,
+with the same commands, valgrind tells me that all memory was accounted for.
+I'm not sure why this discrepancy exists.
+
+--> I believe some of the files on here are redundant, as they're from when
+"make" is used for qtest.
+
+--> In q_insert_tail I use strdup which uses malloc, yet in q_remove_head
+I used strcpy with a malloc used beforehand. Only reason I used strcpy was
+because I figured the amount needed to allocate memory was explicitly stated
+in the instructions. Otherwise, I would've just used strdup.
