@@ -12,10 +12,7 @@
 * variable types generic.
 */
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include "tjhcore.h"
 
 // Safer version of malloc that makes sure memory gets allocated.
 void* TJH_malloc(size_t size)
@@ -33,14 +30,4 @@ void TJH_free(void *mem)
 {
     if (mem != NULL)
         free(mem);
-}
-
-void* TJH_new(size_t var)
-{
-    return (void*)TJH_malloc(sizeof(var));
-}
-
-char* TJH_new_str(char* str)
-{
-    return strcpy((char*)TJH_malloc(strlen((str))+ 1),(str));
 }

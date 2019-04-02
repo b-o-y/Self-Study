@@ -12,27 +12,26 @@
 * variable types generic.
 */
 
-#ifndef CDA_H
-#define CDA_H
+#ifndef TJHCORE_H
+#define TJHCORE_H
 
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <assert.h>
 
 // Defining true/false purely for convenience.
-#define TJH_TRUE        (1)
-#define TJH_FALSE       (0)
+typedef enum { TJH_false, TJH_true } TJH_BOOL_t;
 
-/* Functions, wouldn't mind knowing how to get the macros that are 
-* commented out to work... */
-//#define TJH_NEW(var)    ((var*)TJH_malloc(sizeof(var)))
-/*#define TJH_NEW_STR(str)        \
-    (strcpy((char*)TJH_malloc(strlen((str))+ 1),(str)))*/
+#define TJH_NEW(var)    ((var*)TJH_malloc(sizeof(var)))
+#define TJH_NEW_STR(str)        \
+    (strcpy((char*)TJH_malloc(strlen((str))+ 1),(str)))
 #define TJH_ASSERT(var) (assert(var))
 #define TJH_SIZEOF(arr) (sizeof((arr))/sizeof(*(arr))) // TJH_SIZEOF print format is ld.
 #define TJH_NEW_STR_IF(str) \
-    ((str) == NULL ? NULL : TJH_new_str((str)))
+    ((str) == NULL ? NULL : TJH_NEW_STR((str)))
 
-void TJH_malloc(size_t size);
+void* TJH_malloc(size_t size);
 void TJH_free(void *mem);
-void* TJH_new(size_t var);
-char* TJH_new_str(char* str);
 #endif
