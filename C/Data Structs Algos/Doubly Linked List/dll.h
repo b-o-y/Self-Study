@@ -5,7 +5,7 @@
 typedef struct enq_item_s
 {
     struct enq_item_s *flink;
-    struct enq_tiem_s *blink;
+    struct enq_item_s *blink;
     char              *name;
 } ENQ_ITEM_t, *ENQ_ITEM_p_t;
 typedef ENQ_ITEM_t ENQ_ANCHOR_t, *ENQ_ANCHOR_p_t;
