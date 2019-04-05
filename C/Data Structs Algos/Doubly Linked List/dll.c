@@ -180,6 +180,33 @@ ENQ_ITEM_p_t ENQ_deq_item( ENQ_ITEM_p_t item )
     ENQ_ITEM_p_t placeholder = item->flink; // Placeholder is AFTER item.
     placeholder->blink = item->blink;       // AFTER points to BEFORE.
     item->blink->flink = placeholder;       // BEFORE points to AFTER.
+
+    item->flink = item; // Return item to it's default state.
+    item->blink = item;
     
     return item;
+}
+
+/*
+* Where:
+*       list -> list from which to dequeue
+* Returns:
+*       If queue is nonempty, the address of the dequeued item;
+*       Otherwise the address of the list.
+*/
+ENQ_ITEM_p_t ENQ_deq_tail( ENQ_ANCHOR_p_t list )
+{
+    if ( ENQ_is_list_empty(list) )
+        return list;
+    else
+    {
+        ENQ_ITEM_p_t placeholder  = list->blink;        // Placeholder points to tail.
+        list->blink               = placeholder->blink; // Head points to 2nd to last item.
+        placeholder->blink->flink = list;               // 2nd to last item points to head.
+
+        placeholder->flink = placeholder; // Return tail item to it's default state.
+        placeholder->blink = placeholder;
+        
+        return placeholder;
+    }
 }

@@ -42,8 +42,11 @@ int main()
 
     // Dequeue item.
     ENQ_deq_item(dig);
-    printf("%s\n", one->blink->blink->blink->blink->name);
+    //printf("%s\n", one->blink->blink->blink->blink->name);
  
-    
+    // Dequeue tail.
+    check = ENQ_deq_tail(one);
+    printf("Deq'd tail: %x\n", &(*check));
+    printf("%s\n", one->flink->flink->flink->blink->name);
     return 0;
 }
