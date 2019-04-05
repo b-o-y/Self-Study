@@ -9,7 +9,8 @@
 */
 
 /*
-* Returns: The address of the list.
+* Returns: 
+*       The address of the list.
 * Notes:
 * 1) The caller is responsible for freeing the memory occupied
 *    by the list by calling ENQ_destroy_list.
@@ -22,7 +23,7 @@ ENQ_ANCHOR_p_t ENQ_create_list( const char *name )
     
     list->flink = list;
     list->blink = list;
-    list->name = TJH_NEW_STR_IF( name );
+    list->name  = TJH_NEW_STR_IF( name );
     
     return list;
 }
@@ -31,7 +32,8 @@ ENQ_ANCHOR_p_t ENQ_create_list( const char *name )
 * Where:
 *       name -> the name of the item.
         size == size of item required.
-* Returns: The address of the item.
+* Returns: 
+*       The address of the item.
 * Notes:
 * 1) The caller is responsible for freeing the memory occupied
 *    by the item by calling ENQ_destroy_item.
@@ -49,7 +51,7 @@ ENQ_ITEM_p_t ENQ_create_item( const char *name, size_t size )
     TJH_ASSERT( size >= sizeof(ENQ_ITEM_t) );
     item->flink = item;
     item->blink = item;
-    item->name = TJH_NEW_STR_IF( name );
+    item->name  = TJH_NEW_STR_IF( name );
     
     return item;
 }
@@ -57,7 +59,8 @@ ENQ_ITEM_p_t ENQ_create_item( const char *name, size_t size )
 /*
 * Where:
 *       item -> item to test.
-* Returns: TJH_TRUE if the item is enqueued, TJH_FALSE otherwise.
+* Returns: 
+*       TJH_TRUE if the item is enqueued, TJH_FALSE otherwise.
 */
 TJH_BOOL_t ENQ_is_item_enqed( ENQ_ITEM_p_t item )
 {
@@ -80,7 +83,8 @@ TJH_BOOL_t ENQ_is_list_empty( ENQ_ANCHOR_p_t list )
 * Where:
 *       list -> list in which to enqueue.
 *       item -> item to enqueue.
-* Returns: address of enqueued item
+* Returns: 
+*       address of enqueued item
 */
 ENQ_ITEM_p_t ENQ_add_head( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
 {
@@ -106,7 +110,8 @@ ENQ_ITEM_p_t ENQ_add_head( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
 * Where:
 *       list -> list in which to enqueue.
 *       item -> item to enqueue.
-* Returns: address of enqueued item
+* Returns: 
+*       address of enqueued item
 */
 ENQ_ITEM_p_t ENQ_add_tail( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
 {
@@ -132,7 +137,8 @@ ENQ_ITEM_p_t ENQ_add_tail( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
 * Where:
 *       item  -> item to enqueue.
         after -> item after which to enqueue.
-* Returns: Address of enqueued itme.
+* Returns: 
+*       Address of enqueued itme.
 */
 ENQ_ITEM_p_t ENQ_add_after( ENQ_ITEM_p_t item, ENQ_ITEM_p_t after )
 {
@@ -149,15 +155,31 @@ ENQ_ITEM_p_t ENQ_add_after( ENQ_ITEM_p_t item, ENQ_ITEM_p_t after )
 * Where:
 *       item  -> item to enqueue.
         after -> item before which to enqueue.
-* Returns: Address of enqueued itme.
+* Returns: 
+*       Address of enqueued itme.
 */
 ENQ_ITEM_p_t ENQ_add_before( ENQ_ITEM_p_t item, ENQ_ITEM_p_t before )
 {
     TJH_ASSERT( !ENQ_is_item_enqed( item ) );
     before->flink->blink = item;   // Item AFTER points to NEW item.
-    item->flink  = before->flink;  // NEW item points to AFTER.   
-    item->blink  = before;         // NEW item points to BEFORE.
+    item->flink   = before->flink; // NEW item points to AFTER.   
+    item->blink   = before;        // NEW item points to BEFORE.
     before->flink = item;          // BEFORE points to NEW item. 
 
+    return item;
+}
+
+/*
+* Where:
+*       item -> item to dequeue.
+* Returns:
+*       address of dequeued item.
+*/
+ENQ_ITEM_p_t ENQ_deq_item( ENQ_ITEM_p_t item )
+{
+    ENQ_ITEM_p_t placeholder = item->flink; // Placeholder is AFTER item.
+    placeholder->blink = item->blink;       // AFTER points to BEFORE.
+    item->blink->flink = placeholder;       // BEFORE points to AFTER.
+    
     return item;
 }

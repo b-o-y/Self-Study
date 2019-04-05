@@ -38,7 +38,11 @@ int main()
     char *dog = "dog";
     ENQ_ITEM_p_t dig = ENQ_create_item(dog, sizeof(ENQ_ITEM_t));
     ENQ_add_before(dig, kit);
-    printf("%s\n", one->blink->blink->blink->name);
+    //printf("%s\n", one->blink->blink->blink->name);
+
+    // Dequeue item.
+    ENQ_deq_item(dig);
+    printf("%s\n", one->blink->blink->blink->blink->name);
  
     
     return 0;
