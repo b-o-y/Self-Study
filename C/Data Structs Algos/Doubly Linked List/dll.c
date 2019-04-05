@@ -79,6 +79,6 @@ ENQ_ITEM_p_t ENQ_add_head( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
         item->flink = list->flink; // New item points to previous item.
         list->flink = item;        // Head points to new item.
         item->blink = list;        // New item points to head.
-    }
+    } // GIT PRACTICE.
     return item;    
 }
