@@ -1,5 +1,14 @@
 #include "dll.h"
 /*
+* NOTES ON TERMINOLOGY:
+* Item 1 > flink > Item 2 > flink > Item 3.....
+* Item 1 < blink < Item 2 < blink < Item 3.....
+* 
+* If Item 1 and Item 3 were connected, and I inserted Item 2 between
+* them, then: BEFORE is Item 1, AFTER is Item 3. (I read left to right!).
+*/
+
+/*
 * Returns: The address of the list.
 * Notes:
 * 1) The caller is responsible for freeing the memory occupied
@@ -132,6 +141,23 @@ ENQ_ITEM_p_t ENQ_add_after( ENQ_ITEM_p_t item, ENQ_ITEM_p_t after )
     item->blink  = after->blink; // NEW item points to BEFORE.   
     item->flink  = after;        // NEW item points to AFTER.
     after->blink = item;         // AFTER points to NEW item. 
+
+    return item;
+}
+
+/*
+* Where:
+*       item  -> item to enqueue.
+        after -> item before which to enqueue.
+* Returns: Address of enqueued itme.
+*/
+ENQ_ITEM_p_t ENQ_add_before( ENQ_ITEM_p_t item, ENQ_ITEM_p_t before )
+{
+    TJH_ASSERT( !ENQ_is_item_enqed( item ) );
+    before->flink->blink = item;   // Item AFTER points to NEW item.
+    item->flink  = before->flink;  // NEW item points to AFTER.   
+    item->blink  = before;         // NEW item points to BEFORE.
+    before->flink = item;          // BEFORE points to NEW item. 
 
     return item;
 }

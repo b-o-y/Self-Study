@@ -32,10 +32,14 @@ int main()
     char *cat = "cat";
     ENQ_ITEM_p_t kit = ENQ_create_item(cat, sizeof(ENQ_ITEM_t));
     ENQ_add_after(kit, b);
-    //printf("%s\n", one->blink->blink->blink->blink->name);
+    //printf("%s\n", one->flink->flink->name);
 
-    // ABOVE HAS TESTED OK, SO FAR.
-    
+    // Adding item behind BEFORE.
+    char *dog = "dog";
+    ENQ_ITEM_p_t dig = ENQ_create_item(dog, sizeof(ENQ_ITEM_t));
+    ENQ_add_before(dig, kit);
+    printf("%s\n", one->blink->blink->blink->name);
+ 
     
     return 0;
 }
