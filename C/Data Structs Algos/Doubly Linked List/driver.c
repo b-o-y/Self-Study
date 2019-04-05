@@ -24,9 +24,9 @@ int main()
     char *jp = "b";
     ENQ_ITEM_p_t b = ENQ_create_item(jp, sizeof(ENQ_ITEM_t));
     printf("Address of 'b' item: %x\n", &(*b));
-    check = ENQ_add_head(one, b);    
+    check = ENQ_add_tail(one, b);    
     printf("should be the same as last address: %x\n", &(*check));
-    printf("%s\n", one->blink->name);
+    printf("%s\n", one->flink->flink->flink->name);
     
     
     return 0;

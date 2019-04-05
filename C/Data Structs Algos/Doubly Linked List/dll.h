@@ -15,6 +15,7 @@ ENQ_ITEM_p_t ENQ_create_item( const char *name, size_t size );
 TJH_BOOL_t ENQ_is_item_enqed( ENQ_ITEM_p_t item );
 TJH_BOOL_t ENQ_is_list_empty( ENQ_ANCHOR_p_t list );
 ENQ_ITEM_p_t ENQ_add_head( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item );
+ENQ_ITEM_p_t ENQ_add_tail( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item );
 
 
 
