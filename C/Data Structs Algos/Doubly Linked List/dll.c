@@ -66,4 +66,19 @@ TJH_BOOL_t ENQ_is_list_empty( ENQ_ANCHOR_p_t list )
 ENQ_ITEM_p_t ENQ_add_head( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
 {
     TJH_ASSERT( !ENQ_is_item_enqed( item ) );
+    if ( ENQ_is_list_empty(list) ) // Empty list.
+    {
+        list->flink = item;        // Set the head to point to the item.
+        list->blink = item; 
+        item->flink = list;        // Set the item to point to the head.
+        item->blink = list;      
+    }
+    else                           // List is not empty.
+    {
+        list->flink->blink = item; // Previous item points to new item.
+        item->flink = list->flink; // New item points to previous item.
+        list->flink = item;        // Head points to new item.
+        item->blink = list;        // New item points to head.
+    }
+    return item;    
 }
