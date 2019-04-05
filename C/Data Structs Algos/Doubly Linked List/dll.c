@@ -19,6 +19,9 @@ ENQ_ANCHOR_p_t ENQ_create_list( const char *name )
 }
 
 /*
+* Where:
+*       name -> the name of the item.
+        size == size of item required.
 * Returns: The address of the item.
 * Notes:
 * 1) The caller is responsible for freeing the memory occupied
@@ -43,6 +46,8 @@ ENQ_ITEM_p_t ENQ_create_item( const char *name, size_t size )
 }
 
 /*
+* Where:
+*       item -> item to test.
 * Returns: TJH_TRUE if the item is enqueued, TJH_FALSE otherwise.
 */
 TJH_BOOL_t ENQ_is_item_enqed( ENQ_ITEM_p_t item )
@@ -52,7 +57,9 @@ TJH_BOOL_t ENQ_is_item_enqed( ENQ_ITEM_p_t item )
 }
 
 /*
-* Returns: CDA_TRUE if the list is empty, CDA_FALSE otherwise
+* Where:
+*       list -> list to test.
+* Returns: CDA_TRUE if the list is empty, CDA_FALSE otherwise.
 */
 TJH_BOOL_t ENQ_is_list_empty( ENQ_ANCHOR_p_t list )
 {
@@ -61,6 +68,9 @@ TJH_BOOL_t ENQ_is_list_empty( ENQ_ANCHOR_p_t list )
 }
 
 /*
+* Where:
+*       list -> list in which to enqueue.
+*       item -> item to enqueue.
 * Returns: address of enqueued item
 */
 ENQ_ITEM_p_t ENQ_add_head( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
@@ -84,6 +94,9 @@ ENQ_ITEM_p_t ENQ_add_head( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
 }
 
 /*
+* Where:
+*       list -> list in which to enqueue.
+*       item -> item to enqueue.
 * Returns: address of enqueued item
 */
 ENQ_ITEM_p_t ENQ_add_tail( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
@@ -104,4 +117,21 @@ ENQ_ITEM_p_t ENQ_add_tail( ENQ_ANCHOR_p_t list, ENQ_ITEM_p_t item )
         item->flink = list;        // New item points to head.
     }
     return item;    
+}
+
+/*
+* Where:
+*       item  -> item to enqueue.
+        after -> item after which to enqueue.
+* Returns: Address of enqueued itme.
+*/
+ENQ_ITEM_p_t ENQ_add_after( ENQ_ITEM_p_t item, ENQ_ITEM_p_t after )
+{
+    TJH_ASSERT( !ENQ_is_item_enqed( item ) );
+    after->blink->flink = item;  // Item BEFORE points to NEW item.
+    item->blink  = after->blink; // NEW item points to BEFORE.   
+    item->flink  = after;        // NEW item points to AFTER.
+    after->blink = item;         // AFTER points to NEW item. 
+
+    return item;
 }

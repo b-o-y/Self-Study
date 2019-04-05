@@ -20,13 +20,21 @@ int main()
     printf("should be the same as last address: %x\n", &(*check));
     printf("Item should now be enqed: %d\n", ENQ_is_item_enqed(a));
     
-    // Adding 2nd item to head.
+    // Adding 2nd item to tail.
     char *jp = "b";
     ENQ_ITEM_p_t b = ENQ_create_item(jp, sizeof(ENQ_ITEM_t));
     printf("Address of 'b' item: %x\n", &(*b));
     check = ENQ_add_tail(one, b);    
     printf("should be the same as last address: %x\n", &(*check));
-    printf("%s\n", one->flink->flink->flink->name);
+    //printf("%s\n", one->flink->flink->flink->name);
+
+    // Adding item in front of AFTER.
+    char *cat = "cat";
+    ENQ_ITEM_p_t kit = ENQ_create_item(cat, sizeof(ENQ_ITEM_t));
+    ENQ_add_after(kit, b);
+    //printf("%s\n", one->blink->blink->blink->blink->name);
+
+    // ABOVE HAS TESTED OK, SO FAR.
     
     
     return 0;
