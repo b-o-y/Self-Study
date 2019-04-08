@@ -2,6 +2,9 @@
 #define DLL_H
 #include "tjhcore.h"
 
+#define ENQ_GET_HEAD( list ) ((list)->flink)
+#define ENQ_GET_TAIL( list ) ((list)->blink)
+
 typedef struct enq_item_s
 {
     struct enq_item_s *flink;

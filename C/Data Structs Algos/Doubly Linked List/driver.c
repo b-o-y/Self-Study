@@ -48,5 +48,9 @@ int main()
     check = ENQ_deq_tail(one);
     printf("Deq'd tail: %x\n", &(*check));
     printf("%s\n", one->flink->flink->flink->blink->name);
+    
+    // Get head/tail.
+    printf("%x\n", ENQ_GET_HEAD(one));
+    printf("%x\n", ENQ_GET_TAIL(one));
     return 0;
 }
