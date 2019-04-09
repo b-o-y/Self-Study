@@ -41,7 +41,7 @@ int main()
     //printf("%s\n", one->blink->blink->blink->name);
 
     // Dequeue item.
-    ENQ_deq_item(dig);
+    /*ENQ_deq_item(dig);
     //printf("%s\n", one->blink->blink->blink->blink->name);
  
     // Dequeue tail.
@@ -51,6 +51,15 @@ int main()
     
     // Get head/tail.
     printf("%x\n", ENQ_GET_HEAD(one));
-    printf("%x\n", ENQ_GET_TAIL(one));
+    printf("%x\n", ENQ_GET_TAIL(one));*/
+
+    // Macros Testing.
+    printf("ENQ_GET_HEAD: %x\n", ENQ_GET_HEAD(one));
+    printf("ENQ_GET_TAIL: %x\n", ENQ_GET_TAIL(one));
+    printf("ENQ_GET_NEXT: %x\n", ENQ_GET_NEXT(dig));
+    printf("ENQ_GET_PREV: %x\n", ENQ_GET_PREV(dig));
+    printf("ENQ_GET_LIST_NAME: %s\n", ENQ_GET_LIST_NAME(one));
+    printf("ENQ_GET_ITEM_NAME: %s\n", ENQ_GET_ITEM_NAME(dig));
+
     return 0;
 }

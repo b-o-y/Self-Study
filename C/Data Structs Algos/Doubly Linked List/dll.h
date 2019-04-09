@@ -4,6 +4,10 @@
 
 #define ENQ_GET_HEAD( list ) ((list)->flink)
 #define ENQ_GET_TAIL( list ) ((list)->blink)
+#define ENQ_GET_NEXT( item ) ((item)->flink)
+#define ENQ_GET_PREV( item ) ((item)->blink)
+#define ENQ_GET_LIST_NAME ( list ) ((const char *) ((list)->name)
+#define ENQ_GET_ITEM_NAME ( item ) ((const char *) ((item)->name)
 
 typedef struct enq_item_s
 {
@@ -23,9 +27,5 @@ ENQ_ITEM_p_t ENQ_add_after( ENQ_ITEM_p_t item,ENQ_ITEM_p_t after );
 ENQ_ITEM_p_t ENQ_add_before( ENQ_ITEM_p_t item,ENQ_ITEM_p_t before );
 ENQ_ITEM_p_t ENQ_deq_item( ENQ_ITEM_p_t item );
 ENQ_ITEM_p_t ENQ_deq_tail( ENQ_ANCHOR_p_t list );
-
-
-
-
 
 #endif
