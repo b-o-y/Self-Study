@@ -210,3 +210,54 @@ ENQ_ITEM_p_t ENQ_deq_tail( ENQ_ANCHOR_p_t list )
         return placeholder;
     }
 }
+
+/*
+* Where:
+*       item -> item to destroy
+* Returns:
+*       NULL
+* Notes:
+*       The item to destroy may be enqueued or unenqueued. If enqueued, it will 
+*       be dequeued prior to destruction.
+*/
+ENQ_ITEM_p_t ENQ_destroy_item( ENQ_ITEM_p_t item )
+{
+    ENQ_deq_item(item);
+    TJH_free(item->name);
+    TJH_free(item);
+
+    return NULL;
+}
+
+/*
+* Where:
+*       list -> list to empty
+* Returns:
+*       The address of the list.
+* Notes:
+*       All items enqueued in the list will be destroyed.
+*/
+ENQ_ANCHOR_p_t ENQ_empty_list( ENQ_ANCHOR_p_t list )
+{
+    while ( !ENQ_is_list_empty(list) )
+        ENQ_destroy_item(list->flink);
+    
+    return list;
+}
+
+/*
+* Where:
+*       list -> list to destroy
+* Returns:
+*       NULL
+* Notes:
+*       All items enqueued in the list will be destroyed.
+*/
+ENQ_ANCHOR_p_t ENQ_destroy_list( ENQ_ANCHOR_p_t list )
+{
+    ENQ_empty_list(list);
+    TJH_free(list->name);
+    TJH_free(list);
+    
+    return NULL;
+}

@@ -27,5 +27,8 @@ ENQ_ITEM_p_t ENQ_add_after( ENQ_ITEM_p_t item,ENQ_ITEM_p_t after );
 ENQ_ITEM_p_t ENQ_add_before( ENQ_ITEM_p_t item,ENQ_ITEM_p_t before );
 ENQ_ITEM_p_t ENQ_deq_item( ENQ_ITEM_p_t item );
 ENQ_ITEM_p_t ENQ_deq_tail( ENQ_ANCHOR_p_t list );
+ENQ_ITEM_p_t ENQ_destroy_item( ENQ_ITEM_p_t item );
+ENQ_ANCHOR_p_t ENQ_empty_list( ENQ_ANCHOR_p_t list );
+ENQ_ANCHOR_p_t ENQ_destroy_list( ENQ_ANCHOR_p_t list );
 
 #endif
